@@ -1,0 +1,267 @@
+
+### Java核心技术
+
+- Java基础
+  - 类： 类是对象的蓝图或模板，它定义了对象的属性（字段）和行为（方法）。
+  - 对象： 对象是类的实例，是根据类创建的实体。对象包含类定义的属性值，并能够调用类的方法。
+  - 变量和数据类型
+  - 运算符
+  - 控制流（条件语句、循环）
+  - 方法和参数传递
+    - 多态：是面向对象编程的一个特性，允许同一个接口方法在不同的对象中具有不同的实现。在Java中，多态可以通过方法重载和方法重写来实现。
+      - 方法重载（Overloading）： 在同一个类中定义多个方法，它们具有相同的名字但参数不同。
+        - 发生在同一个类中。
+        - 方法名相同，但参数列表不同（参数的类型、数量或顺序不同）。
+        - 可以有不同的返回类型。
+        - 编译时多态，即在编译时决定调用哪个方法。
+      - 方法重写（Overriding）： 在子类中重新定义父类的一个方法，该方法具有相同的名字和参数。
+        - 发生在子类与父类之间。
+        - 方法名和参数列表都相同。
+        - 返回类型必须相同（Java 5及之后版本支持协变返回类型，即可以是子类型）。
+        - 必须有相同的访问修饰符或更严格的访问权限。
+        - 运行时多态，即在运行时决定调用哪个方法。
+    - 继承：是面向对象编程中的一种机制，允许一个类继承另一个类的属性和方法。Java中使用extends关键字实现类的继承。
+    - 接口和抽象类
+      - 接口： 接口是抽象方法的集合，定义了一组方法，但不提供实现。类可以实现一个或多个接口。使用interface关键字定义接口。
+      - 抽象类： 抽象类是包含一个或多个抽象方法的类，这些方法没有实现。抽象类不能被实例化，只能被继承。使用abstract关键字定义抽象类。
+      - 区别
+        - 接口中的方法默认是public和abstract，而抽象类中的方法可以有任何访问修饰符。
+        - 接口不能包含实例字段，抽象类可以包含实例字段。
+        - 一个类可以实现多个接口，但只能继承一个抽象类。
+    - 可变参数（varargs）
+      - 可变参数（varargs）允许一个方法接受不定数量的参数。使用可变参数时，方法的参数列表中最后一个参数可以指定为可变参数，使用语法type... varname。
+    - 递归方法
+      - 递归方法是指调用自身的方法。递归方法需要有一个终止条件，否则会导致无限递归。
+    - 方法参数是如何传递
+      - Java中方法参数是按值传递的。对于引用类型，传递的是对象引用的副本。
+      - 弱引用（WeakReference）
+        - 弱引用是一种引用类型，当对象只被弱引用引用时，垃圾收集器会回收该对象。弱引用通常用于实现缓存。Java提供了WeakHashMap，它使用弱引用键，当没有其他强引用时，键值对会被垃圾收集。
+
+  - 集合框架
+
+    集合框架是Java中用于存储和操作一组对象的标准化体系结构
+    - 主要接口及实现类
+      - Collection： 是集合层次结构的根接口，主要子接口包括List、Set和Queue。
+      - List： 有序集合，允许重复元素。主要实现类有ArrayList、LinkedList、Vector。
+        - ArrayList：
+          - 基于动态数组实现，支持快速随机访问。
+          - 插入和删除元素时，可能需要移动大量元素，因此性能较差（时间复杂度O(n)）。
+          - 遍历元素时性能较好，因为底层是数组结构，元素存储是连续的。
+          - CopyOnWriteArrayList
+            - CopyOnWriteArrayList是线程安全的ArrayList实现，通过在每次修改时复制整个底层数组来实现。
+            - 读多写少的场景： 读操作不加锁，写操作较少。
+            - 迭代过程中不需要考虑并发修改： 迭代使用副本，不会抛出ConcurrentModificationException。
+        - LinkedList：
+          - 基于双向链表实现，每个元素包含一个指向前后元素的引用。
+          - 插入和删除元素时，只需修改前后引用，性能较好（时间复杂度O(1)）。
+          - 随机访问元素时需要从头或尾开始遍历，性能较差（时间复杂度O(n)）。
+      - Set： 无序集合，不允许重复元素。主要实现类有HashSet、LinkedHashSet、TreeSet。
+        - HashSet：
+          - 基于哈希表实现，不保证元素的顺序。
+          - 插入、删除和查找操作的时间复杂度为O(1)。
+          - 允许包含一个null元素。
+        - TreeSet：
+          - 基于红黑树（自平衡二叉搜索树）实现，保证元素的自然顺序（或通过比较器指定的顺序）。
+          - 插入、删除和查找操作的时间复杂度为O(log n)。
+          - 不允许包含null元素。
+      - Map： 键值对集合，键不允许重复。主要实现类有HashMap、LinkedHashMap、TreeMap、Hashtable。
+        - HashMap：
+          - 非线程安全，不适用于多线程环境。
+          - 允许一个null键和多个null值。
+          - 迭代器是fail-fast的，如果在迭代过程中结构发生变化，会抛出ConcurrentModificationException。
+          - 工作原理：
+            - HashMap通过哈希表实现键值对存储
+            - 哈希函数： 通过键的hashCode()方法计算哈希值，再通过哈希值确定键值对存储的桶（bucket）位置。
+            - 插入、删除、查找操作时间复杂度为O(1)。
+            - 元素无序。
+            - 扩容： 当元素数量超过负载因子（默认0.75）乘以桶的数量时，进行扩容（通常是容量的两倍）并重新哈希（rehash）。
+            - 冲突处理： 当不同的键具有相同的哈希值时，通过链表或红黑树存储在同一个桶中（Java 8之前使用链表，之后链表长度超过阈值时使用红黑树）。
+            - key冲突
+              - 选择合适的哈希函数： 确保生成的哈希值均匀分布。
+              - 合理设置初始容量和负载因子： 以减少扩容次数和冲突概率。
+              - 使用合适的key类型： 避免使用hashCode()分布不均匀的类型，如字符串长度较短的字符串。
+              - 升级到Java 8及以上版本： 使用红黑树来处理冲突链表过长的问题。
+          - LinkedHashMap
+            - 它维护了插入顺序或访问顺序的双向链表
+            - 实现LRU缓存： 通过设置访问顺序，重写removeEldestEntry方法，实现最近最少使用（LRU）缓存。
+        - TreeMap
+          - 基于红黑树实现，保证键的有序性。
+          - 插入、删除、查找操作时间复杂度为O(log n)。
+          - 元素有序，可以通过迭代器按键的自然顺序或比较器顺序遍历。
+        - Hashtable：
+          - 线程安全，所有方法都是同步的。
+          - 不允许任何null键或null值。
+          - 迭代器是fail-safe的，即使在迭代过程中结构发生变化，也不会抛出异常。
+        - ConcurrentHashMap
+          - ConcurrentHashMap是一个线程安全的HashMap实现，适用于高并发环境。它通过分段锁机制实现线程安全，即将整个Map分为多个段，每个段有一个独立的锁。这样，多个线程可以同时访问不同段，从而提高并发性能。在Java 8中，ConcurrentHashMap使用CAS（Compare-And-Swap）操作和细粒度锁进一步优化性能。
+        - Comparator和Comparable
+          - Comparable：
+            - 定义在类内部，通过实现compareTo方法进行自然排序。
+            - 适用于单一排序顺序。
+          - Comparator：
+            - 定义在类外部，通过实现compare方法进行定制排序。
+            - 适用于多种排序顺序。
+      - Queue： 用于按FIFO（先进先出）顺序存储元素。主要实现类有LinkedList、PriorityQueue。
+        - Deque（双端队列）是同时支持在队列两端插入和删除操作的队列。常用实现包括
+          - ArrayDeque： 基于数组的无界双端队列。
+          - LinkedList： 实现了Deque接口的链表。
+        - PriorityQueue
+          - PriorityQueue是基于优先级堆实现的队列，元素按自然顺序或指定的比较器顺序排序。插入、删除和获取操作的时间复杂度为O(log n)。
+          - 实现优先级的方法
+            - 自然顺序： 元素类型必须实现Comparable接口。
+            - 定制顺序： 通过构造方法传入Comparator实现类。
+        - BlockingQueue：是一个支持线程安全操作的队列，当队列为空时获取操作会被阻塞，当队列满时添加操作会被阻塞
+          - ArrayBlockingQueue： 有界阻塞队列，基于数组实现。
+          - LinkedBlockingQueue： 可选有界阻塞队列，基于链表实现。
+          - PriorityBlockingQueue： 无界阻塞队列，基于优先级堆实现。
+          - DelayQueue： 无界阻塞队列，基于优先级堆实现，元素只有在特定延迟之后才能被消费。
+      - 适用场景
+        - 如果需要快速随机访问： 使用ArrayList或HashMap。
+        - 如果需要频繁的插入和删除操作： 使用LinkedList或LinkedHashMap。
+        - 如果需要保证元素的顺序： 使用LinkedHashSet或LinkedHashMap。
+        - 如果需要排序： 使用TreeSet或TreeMap。
+        - 如果需要线程安全： 使用Collections.synchronizedList/synchronizedMap，或使用并发集合类如ConcurrentHashMap。
+      - Enum
+        - EnumSet：
+          - 专门用于枚举类型的集合。
+          - 高效实现，比一般的Set性能更好。
+          - 内部使用位向量表示，存储效率高。
+        - EnumMap：
+          - 专门用于枚举类型键的Map。
+          - 高效实现，比一般的Map性能更好。
+          - 内部使用数组表示，存储效率高。
+      - 线程安全的集合
+        - ConcurrentHashMap
+        - CopyOnWriteArrayList
+        - CopyOnWriteArraySet
+        - BlockingQueue的各种实现
+        - Collections工具类提供的同步方法
+    - 迭代器
+      - 迭代器模式用于顺序访问集合中的元素，而不暴露集合的内部实现。Java集合框架中通过Iterator接口实现这一模式
+      - 主要方法
+        - hasNext()： 判断是否有下一个元素。
+        - next()： 返回下一个元素。
+        - remove()： 删除当前元素（可选操作）。
+      - Fail-fast迭代器：
+        - 在迭代过程中，如果集合的结构发生变化（如元素增加或删除），会抛出ConcurrentModificationException。
+        - 常见于ArrayList、HashMap等集合类。
+      - Fail-safe迭代器：
+        - 在迭代过程中，允许结构发生变化，不会抛出异常。
+        - 使用副本机制，迭代操作在原集合的副本上进行，结构变化不会影响迭代过程。
+        - 常见于CopyOnWriteArrayList、ConcurrentHashMap等并发集合类。
+    - 集合工具类（Collections）
+      - 排序：
+        - Collections.sort(list);
+      - 查找最大/最小值：
+        - Collections.max(collection);
+        - Collections.min(collection);
+      - 反转：
+        - Collections.reverse(list);
+      - 填充：
+        - Collections.fill(list, value);
+      - 不可变集合：
+        - List<String> immutableList = Collections.unmodifiableList(list);
+
+  - 异常处理
+    - 异常处理是处理程序在运行时发生的错误的一种机制。Java中使用try-catch-finally块进行异常处理
+      - try块包含可能抛出异常的代码。
+      - catch块用于捕获并处理特定类型的异常。
+      - finally块包含始终执行的代码，用于清理资源。
+    - 自定义异常
+    - 异常链
+  - 泛型
+    - 泛型是Java中的一种机制，允许在定义类、接口和方法时使用类型参数，从而在使用时指定具体的类型。泛型提供了类型安全的编程方式，避免了类型转换的错误，提高了代码的重用性和可读性。
+    - 泛型类
+    - 泛型方法
+    - 通配符
+  - 注解
+    - 内置注解（@Override, @Deprecated, @SuppressWarnings）
+    - 自定义注解
+- 并发编程
+  - 线程管理
+    - 线程的创建和生命周期
+    - Executor框架
+  - 同步机制
+    - synchronized关键字
+    - Lock接口
+    - 原子变量
+  - 并发集合
+    - ConcurrentHashMap
+    - CopyOnWriteArrayList
+  - CompletableFuture
+    - 异步编程
+    - 合并多个异步任务
+- IO
+  - NIO
+    - 通道和缓冲区
+    - Selector
+    - 文件锁
+  - 文件操作
+    - 文件读取和写入
+    - 文件路径和目录操作
+- JVM
+  - 主要组成部分
+    - 类加载器（Class Loader）： 负责加载类文件。
+    - 运行时数据区（Runtime Data Area）： 包括堆（Heap）、方法区（Method Area）、栈（Stack）、本地方法栈（Native Method Stack）和程序计数器（Program Counter Register）。
+    - 执行引擎（Execution Engine）： 包括解释器（Interpreter）、即时编译器（JIT Compiler）和垃圾收集器（Garbage Collector）。
+  - 内存模型
+    - JVM内存模型描述了JVM在执行Java程序时内存的管理方式
+    - 区域
+      - 方法区（Method Area）： 存储已被加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。
+      - 栈（Stack）： 每个线程都有自己的栈，存储局部变量、操作数栈、方法调用和返回等信息。
+      - 本地方法栈（Native Method Stack）： 为每个线程保留一个本地方法栈，调用本地（非Java）方法时使用。
+      - 程序计数器（Program Counter Register）： 每个线程都有自己的程序计数器，存储当前正在执行的字节码指令地址。
+  - 性能优化
+    - 性能监控工具
+      - JProfiler
+      - VisualVM
+    - 垃圾回收
+      - 垃圾回收是JVM自动管理内存的机制，通过回收不再使用的对象来释放内存。
+      - 垃圾回收器
+        - Serial GC： 单线程垃圾回收器，适用于客户端应用。
+        - Parallel GC： 多线程垃圾回收器，适用于多核服务器。
+        - CMS（Concurrent Mark-Sweep）GC： 低停顿时间的垃圾回收器，适用于需要快速响应的应用。
+        - G1（Garbage-First）GC： 适用于大内存、多核服务器，提供可预测的停顿时间。
+      - GC日志分析
+  - 类加载机制
+    - 类加载器
+    - 双亲委派模型
+  - 性能监控与调优
+    - 内存分析
+    - CPU分析
+- 新特性
+  - Java8
+    - Lambda表达式
+    - Stream API
+    - 新的日期时间API
+    - 默认方法
+  - Java11
+    - 新的字符串方法
+    - 局部变量类型推断（var）
+  - Java17
+    - 模式匹配
+    - 密封类
+    - 新的JEP（JDK Enhancement Proposals）
+- 单元测试
+  - JUnit
+    - 测试注解
+    - 测试套件
+  - TestNG
+    - 并行测试
+    - 数据驱动测试
+- Java编程思想
+  - 对象和类
+    - 封装、继承、多态
+    - 构造方法
+  - 接口和lambda表达式
+    - 函数式接口
+    - 方法引用
+  - 模块化
+    - Module System（Java 9及以上）
+- Effective Java
+  - 项目结构和设计
+    - 包的命名
+    - 依赖管理
+  - 最佳实践
+    - 创建和销毁对象
+    - 方法的设计
