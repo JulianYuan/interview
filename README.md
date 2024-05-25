@@ -4,7 +4,7 @@ What you need to know for a technical interview.
 
 ## 编程语言 Programming Languages
 
-- Java
+- [Java](/sources/01-Languages/Java/01-Java.md)  
 - Python
 
 ## WEB 容器 Web Containers
